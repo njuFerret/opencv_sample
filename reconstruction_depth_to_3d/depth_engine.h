@@ -28,7 +28,8 @@ public:
   typedef std::array<cv::Point, 5> Landmark;
 
 private:
-  static constexpr char kModelFilename[] = RESOURCE_DIR "model/midasv2_small_256x256.onnx";
+  // static constexpr char kModelFilename[] = RESOURCE_DIR "model/midasv2_small_256x256.onnx";
+  std::string kModelFilename = RESOURCE_DIR "model/midasv2_small_256x256.onnx";
   static constexpr int32_t kModelInputWidth = 256;
   static constexpr int32_t kModelInputHeight = 256;
   const std::array<float, 3> kMeanList = {0.485f, 0.456f, 0.406f};
