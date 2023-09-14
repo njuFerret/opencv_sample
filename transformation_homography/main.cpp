@@ -40,7 +40,7 @@ static std::vector<cv::Point2f> selecting_point_list;
 
 static void loop_main(const cv::Mat& image_org)
 {
-    cv::Mat& image = image_org.clone();
+    cv::Mat image = image_org.clone();
     cvui::context(kWindowMain);
     for (int32_t i = 1; i < static_cast<int32_t>(selecting_point_list.size()); i++) {
         cv::line(image, selecting_point_list[i - 1], selecting_point_list[i], cv::Scalar(255, 0, 0), 2);

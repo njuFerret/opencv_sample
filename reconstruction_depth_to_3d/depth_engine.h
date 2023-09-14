@@ -16,42 +16,40 @@ limitations under the License.
 #define DEPTH_ENGINE_
 
 /*** Include ***/
+#include <array>
 #include <cstdint>
 #include <string>
 #include <vector>
-#include <array>
 
 #include <opencv2/opencv.hpp>
 
-
-class DepthEngine
-{
+class DepthEngine {
 public:
-    typedef std::array<cv::Point, 5> Landmark;
+  typedef std::array<cv::Point, 5> Landmark;
 
 private:
-    static constexpr char kModelFilename[] = RESOURCE_DIR"/model/midasv2_small_256x256.onnx";
-    static constexpr int32_t kModelInputWidth = 256;
-    static constexpr int32_t kModelInputHeight = 256;
-    const std::array<float, 3> kMeanList = { 0.485f, 0.456f, 0.406f };
-    const std::array<float, 3> kNormList = { 0.229f, 0.224f, 0.225f };
+  static constexpr char kModelFilename[] = RESOURCE_DIR "model/midasv2_small_256x256.onnx";
+  static constexpr int32_t kModelInputWidth = 256;
+  static constexpr int32_t kModelInputHeight = 256;
+  const std::array<float, 3> kMeanList = {0.485f, 0.456f, 0.406f};
+  const std::array<float, 3> kNormList = {0.229f, 0.224f, 0.225f};
 
 public:
-    DepthEngine() {}
-    ~DepthEngine() {}
-    bool Initialize();
-    bool Finalize();
-    bool Process(const cv::Mat& image_input, cv::Mat& mat_depth);
-    bool NormalizeMinMax(const cv::Mat& mat_depth, cv::Mat& mat_depth_normalized);
-    bool NormalizeScaleShift(const cv::Mat& mat_depth, cv::Mat& mat_depth_normalized, float scale, float shift);
+  DepthEngine() {}
+  ~DepthEngine() {}
+  bool Initialize();
+  bool Finalize();
+  bool Process(const cv::Mat &image_input, cv::Mat &mat_depth);
+  bool NormalizeMinMax(const cv::Mat &mat_depth, cv::Mat &mat_depth_normalized);
+  bool NormalizeScaleShift(const cv::Mat &mat_depth, cv::Mat &mat_depth_normalized, float scale, float shift);
 
 private:
-    void PreProcess(const cv::Mat& image_input, cv::Mat& blob_input);
-    void Inference(const cv::Mat& blob_input, const std::vector<cv::String> output_name_list, std::vector<cv::Mat>& output_mat_list);
+  void PreProcess(const cv::Mat &image_input, cv::Mat &blob_input);
+  void Inference(const cv::Mat &blob_input, const std::vector<cv::String> output_name_list,
+                 std::vector<cv::Mat> &output_mat_list);
 
 private:
-    cv::dnn::Net net_;
-
+  cv::dnn::Net net_;
 };
 
 #endif
