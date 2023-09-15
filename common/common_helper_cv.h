@@ -41,7 +41,7 @@ std::string CreateGStreamerPipeline(int capture_width, int capture_height, int d
 bool FindSourceImage(const std::string &input_name, cv::VideoCapture &cap, int32_t width = 640, int32_t height = 480);
 bool InputKeyCommand(cv::VideoCapture &cap);
 
-void drawText(cv::Mat &mat, const std::string &text, const cv::Point &position, const cv::Scalar &color,
+void drawTextCn(cv::Mat &mat, const std::string &text, const cv::Point &position, const cv::Scalar &color,
               int fontSize = 24, const std::string &fontFile = "C:/Windows/Fonts/STXIHEI.TTF");
 }        // namespace CommonHelper
 

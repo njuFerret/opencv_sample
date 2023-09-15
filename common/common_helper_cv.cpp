@@ -191,7 +191,7 @@ bool CommonHelper::InputKeyCommand(cv::VideoCapture &cap) {
   return ret_to_quit;
 }
 
-void CommonHelper::drawText(cv::Mat &mat, const std::string &text, const cv::Point &position, const cv::Scalar &color,
+void CommonHelper::drawTextCn(cv::Mat &mat, const std::string &text, const cv::Point &position, const cv::Scalar &color,
                             int fontSize, const std::string &fontFile) {
   // 在cv::Mat上输出文本（含中文）
   //  const std::string fontFile = "C:/Windows/Fonts/STXIHEI.TTF";

@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) {
         cv::line(image, cv::Point(x0, y0), cv::Point(x1, y1), cv::Scalar(0, 255, 0));
       }
     }
-    CommonHelper::drawText(image, "点击开始", cv::Point(10, 20), cv::Scalar(255, 255, 255), 24);
+    CommonHelper::drawTextCn(image, "点击开始", cv::Point(10, 20), cv::Scalar(255, 255, 255), 24);
     //    cvx::putText(image, std::string("点击开始"), cv::Point(10, 20), cnFontFace, 24, cv::Scalar(255, 255, 255));
     cv::imshow(kWindowMain, image);
     int32_t key = cv::waitKey(1);
