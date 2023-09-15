@@ -41,8 +41,8 @@ static constexpr float kFovDeg = 60.0f;
 static CameraModel camera;
 
 /*** Function ***/
-// void EstimateHeadPose(cv::Mat &image, const FaceDetection::Landmark &landmark) {
-#if 0
+void EstimateHeadPose(cv::Mat &image, const face_t &face) {
+
   /* reference: https://qiita.com/TaroYamada/items/e3f3d0ea4ecc0a832fac */
   /* reference: https://github.com/spmallick/learnopencv/blob/master/HeadPose/headPose.cpp */
   static const std::vector<cv::Point3f> face_object_point_list = {
@@ -60,16 +60,16 @@ static CameraModel camera;
   };
 
   std::vector<cv::Point2f> face_image_point_list;
-  face_image_point_list.push_back(landmark[2]);
-  face_image_point_list.push_back(landmark[2]);
-  face_image_point_list.push_back(landmark[0]);
-  face_image_point_list.push_back(landmark[0]);
-  face_image_point_list.push_back(landmark[1]);
-  face_image_point_list.push_back(landmark[1]);
-  face_image_point_list.push_back(landmark[3]);
-  face_image_point_list.push_back(landmark[3]);
-  face_image_point_list.push_back(landmark[4]);
-  face_image_point_list.push_back(landmark[4]);
+  face_image_point_list.push_back(face.landmark[2]);
+  face_image_point_list.push_back(face.landmark[2]);
+  face_image_point_list.push_back(face.landmark[0]);
+  face_image_point_list.push_back(face.landmark[0]);
+  face_image_point_list.push_back(face.landmark[1]);
+  face_image_point_list.push_back(face.landmark[1]);
+  face_image_point_list.push_back(face.landmark[3]);
+  face_image_point_list.push_back(face.landmark[3]);
+  face_image_point_list.push_back(face.landmark[4]);
+  face_image_point_list.push_back(face.landmark[4]);
 
   cv::Mat rvec = cv::Mat_<float>(3, 1);
   cv::Mat tvec = cv::Mat_<float>(3, 1);
@@ -99,7 +99,7 @@ static CameraModel camera;
   double roll = euler_angle_deg_list.at<double>(2, 0);
   snprintf(text, sizeof(text), "X = %-+4.0f, Y = %-+4.0f, Z = %-+4.0f", pitch, yaw, roll);
   CommonHelper::DrawText(image, text, cv::Point(10, 40), 0.7, 3, cv::Scalar(0, 0, 0), cv::Scalar(255, 255, 255), false);
-#endif
+
 #if 0
     static cv::Mat image_icon = cv::imread(RESOURCE_DIR"/mask_rina.png");
     static cv::Mat image_icon_mask;
@@ -143,7 +143,7 @@ static CameraModel camera;
     cv::bitwise_and(image_mask, image, image);
     cv::bitwise_or(image_temp, image, image);
 #endif
-//}
+}
 
 int main(int argc, char *argv[]) {
   /* Initialize Model */
@@ -200,11 +200,12 @@ int main(int argc, char *argv[]) {
 
     // Inference
     tick_meter.start();
-    cv::Mat faces = face_detection.infer(image_input);
+    face_detection.infer(image_input);
     tick_meter.stop();
 
     // Draw results on the input image
-    auto res_image = visualize(image_input, faces, (float)tick_meter.getFPS());
+    //    auto res_image = visualize(image_input, face_detection.getDetectedFacesMat(), (float)tick_meter.getFPS());
+    auto res_image = visualize(image_input, face_detection.getFaces(), (float)tick_meter.getFPS());
     // Visualize in a new window
     // cv::imshow("YuNet Demo", res_image);
 
@@ -212,6 +213,10 @@ int main(int argc, char *argv[]) {
     //    for (int32_t i = 0; i < static_cast<int32_t>(landmark_list.size()); i++) {
     //      EstimateHeadPose(image_input, landmark_list[i]);
     //    }
+
+    for (const auto &face : face_detection.getFaces()) {
+      EstimateHeadPose(res_image, face);
+    }
 
     cv::imshow("Result", res_image);
     int32_t key = cv::waitKey(1);
