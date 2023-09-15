@@ -7,9 +7,9 @@ using FaceLandmark = std::array<cv::Point, 5>;
 
 //  type of single face info
 typedef struct {
-  cv::Rect facebbox;
-  FaceLandmark landmark;
-  double confidence;
+  cv::Rect facebbox;        // 脸部矩形
+  FaceLandmark landmark;        // 脸部5个特征点，右眼->左眼坐标->鼻子坐标->右嘴角坐标->左嘴角坐标
+  double confidence;        // 检测置信度
 } face_t;
 
 // type of all faces
@@ -27,8 +27,16 @@ public:
    */
   void setInputSize(const cv::Size &input_size);
 
+  /**
+   * @brief getDetectedFacesMat 获取检测的人脸
+   * @return 以cv::Mat形式保存的人脸数据
+   */
   const cv::Mat &getDetectedFacesMat() const;
-  const faces_t &getFaces() const;
+  /**
+   * @brief getDetectedFaces 获取检测的人脸
+   * @return 返回类型faces_t，以结构体数组形式存储的人类数据，每个元素为一个人脸数据结构体 fact_t
+   */
+  const faces_t &getDetectedFaces() const;
 
   /**
    * @brief infer 在输入图片中检测人脸
@@ -46,7 +54,7 @@ public:
    */
   void infer(const cv::Mat &image);
 
-  void populateFaceInfo(const cv::Mat &faces_mat);
+  void populateFaces(const cv::Mat &faces_mat);
 
 private:
   cv::Ptr<cv::FaceDetectorYN> model;
@@ -59,7 +67,7 @@ private:
   int backend_id_;
   int target_id_;
   faces_t faces_detected;
-  cv::Mat faces_detected_as_mat;
+  cv::Mat faces_mat_detected;
 };
 
 // cv::Mat visualize(const cv::Mat &src_image, const cv::Mat &faces, float fps = -1.f);

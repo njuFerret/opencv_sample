@@ -29,19 +29,19 @@ void FaceDetection::setInputSize(const cv::Size &input_size) {
   model->setInputSize(input_size_);
 }
 
-const cv::Mat &FaceDetection::getDetectedFacesMat() const { return faces_detected_as_mat; }
+const cv::Mat &FaceDetection::getDetectedFacesMat() const { return faces_mat_detected; }
 
-const faces_t &FaceDetection::getFaces() const { return faces_detected; }
+const faces_t &FaceDetection::getDetectedFaces() const { return faces_detected; }
 
 void FaceDetection::infer(const cv::Mat &image) {
   //  cv::Mat res;
   //  model->detect(image, res);
   //  return res;
-  model->detect(image, faces_detected_as_mat);
-  populateFaceInfo(faces_detected_as_mat);
+  model->detect(image, faces_mat_detected);
+  populateFaces(faces_mat_detected);
 }
 
-void FaceDetection::populateFaceInfo(const cv::Mat &faces_mat) {
+void FaceDetection::populateFaces(const cv::Mat &faces_mat) {
   face_t info;
 
   faces_detected.clear();
@@ -60,50 +60,6 @@ void FaceDetection::populateFaceInfo(const cv::Mat &faces_mat) {
     faces_detected.push_back(info);
   }
 }
-
-// cv::Mat visualize(const cv::Mat &src_image, const cv::Mat &faces, float fps) {
-//   static const cv::Scalar box_color{0, 255, 0};
-//   static std::vector<cv::Scalar> landmark_color{
-//       cv::Scalar(255, 0, 0),          // right eye
-//       cv::Scalar(0, 0, 255),          // left eye
-//       cv::Scalar(0, 255, 0),          // nose tip
-//       cv::Scalar(255, 0, 255),        // right mouth corner
-//       cv::Scalar(0, 255, 255)         // left mouth corner
-//   };
-//   static const cv::Scalar text_color{0, 255, 0};
-
-//  auto output_image = src_image.clone();
-
-//  if (fps >= 0) {
-//    cv::putText(output_image, cv::format("FPS: %.2f", fps), cv::Point(0, 15), cv::FONT_HERSHEY_SIMPLEX, 0.5,
-//    text_color,
-//                2);
-//  }
-
-//  for (int i = 0; i < faces.rows; ++i) {
-//    // Draw bounding boxes
-//    int x1 = static_cast<int>(faces.at<float>(i, 0));
-//    int y1 = static_cast<int>(faces.at<float>(i, 1));
-//    int w = static_cast<int>(faces.at<float>(i, 2));
-//    int h = static_cast<int>(faces.at<float>(i, 3));
-//    cv::rectangle(output_image, cv::Rect(x1, y1, w, h), box_color, 2);
-
-//    // Confidence as text
-//    float conf = faces.at<float>(i, 14);
-//    cv::putText(output_image, cv::format("%.4f", conf), cv::Point(x1, y1 + 12), cv::FONT_HERSHEY_DUPLEX, 0.5,
-//                text_color);
-
-//    // Draw landmarks
-//    for (int j = 0; j < landmark_color.size(); ++j) {
-//      float x = faces.at<float>(i, 2 * j + 4);
-//      float y = faces.at<float>(i, 2 * j + 5);
-//      //        int x = static_cast<int>(faces.at<float>(i, 2 * j + 4));
-//      //        int y = static_cast<int>(faces.at<float>(i, 2 * j + 5));
-//      cv::circle(output_image, cv::Point(x, y), 2, landmark_color[j], 2);
-//    }
-//  }
-//  return output_image;
-//}
 
 cv::Mat visualize(const cv::Mat &src_image, const faces_t &faces, float fps) {
   static const cv::Scalar box_color{0, 255, 0};
@@ -132,7 +88,7 @@ cv::Mat visualize(const cv::Mat &src_image, const faces_t &faces, float fps) {
     cv::putText(output_image, cv::format("%.4f", face.confidence), position, cv::FONT_HERSHEY_DUPLEX, 0.5, text_color);
 
     // Draw landmarks
-    for (int j = 0; j < landmark_color.size(); ++j) {
+    for (int j = 0; j < (int)landmark_color.size(); ++j) {
       cv::circle(output_image, face.landmark.at(j), 2, landmark_color[j], 2);
     }
   }

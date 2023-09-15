@@ -33,8 +33,8 @@ limitations under the License.
 /*** Macro ***/
 static constexpr char kInputImageFilename[] = RESOURCE_DIR "lena.jpg";
 // static constexpr char kModelFilename[] = RESOURCE_DIR "model/face_detection_yunet.onnx";
-//  static constexpr char kModelFilename[] =RESOURCE_DIR "model/face_detection_yunet_2023mar_int8.onnx";
-static constexpr char kModelFilename[] = RESOURCE_DIR "model/yunet_s_640_640.onnx";
+static constexpr char kModelFilename[] = RESOURCE_DIR "model/face_detection_yunet_2023mar.onnx";
+// static constexpr char kModelFilename[] = RESOURCE_DIR "model/yunet_s_640_640.onnx";
 static constexpr float kFovDeg = 60.0f;
 
 /*** Global variable ***/
@@ -182,51 +182,27 @@ int main(int argc, char *argv[]) {
     }
 
     /* Detect face */
-    //    std::vector<cv::Rect> bbox_list;
-    //    std::vector<FaceDetection::Landmark> landmark_list;
-    //    face_detection.Process(image_input, bbox_list, landmark_list);
-
-    /* Draw Result */
-    //    for (int32_t i = 0; i < static_cast<int32_t>(bbox_list.size()); i++) {
-    //      const auto &bbox = bbox_list[i];
-    //      const auto &landmark = landmark_list[i];
-    //      cv::rectangle(image_input, bbox, cv::Scalar(255, 0, 0), 3);
-    //      int32_t num = 0;
-    //      for (const auto &p : landmark) {
-    //        cv::circle(image_input, p, 3, cv::Scalar(255, 0, 0), 2);
-    //        cv::putText(image_input, std::to_string(num++), p, 1, 1.0, cv::Scalar(255, 0, 0));
-    //      }
-    //    }
-
-    // Inference
     tick_meter.start();
+    // Inference
     face_detection.infer(image_input);
     tick_meter.stop();
 
-    // Draw results on the input image
-    //    auto res_image = visualize(image_input, face_detection.getDetectedFacesMat(), (float)tick_meter.getFPS());
-    auto res_image = visualize(image_input, face_detection.getFaces(), (float)tick_meter.getFPS());
-    // Visualize in a new window
-    // cv::imshow("YuNet Demo", res_image);
+    auto faces = face_detection.getDetectedFaces();
+    // 绘制人脸信息
+    auto res_image = visualize(image_input, faces, (float)tick_meter.getFPS());
 
     /* Draw HeadPose */
-    //    for (int32_t i = 0; i < static_cast<int32_t>(landmark_list.size()); i++) {
-    //      EstimateHeadPose(image_input, landmark_list[i]);
-    //    }
-
-    for (const auto &face : face_detection.getFaces()) {
+    for (const auto &face : faces) {
       EstimateHeadPose(res_image, face);
     }
 
+    // 显示图片
     cv::imshow("Result", res_image);
     int32_t key = cv::waitKey(1);
     if (key == 'q' || key == 27)
       break;
     tick_meter.reset();
   }
-
-  //  face_detection.Finalize();
-  //  cv::waitKey(-1);
 
   return 0;
 }
