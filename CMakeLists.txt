@@ -33,6 +33,7 @@ add_subdirectory(curve_fitting)
 add_subdirectory(dnn_face)
 add_subdirectory(dnn_depth_midas)
 add_subdirectory(reconstruction_depth_to_3d)
+add_subdirectory(cvui)
 
 
 #target_include_directories(${EXE_NAME}

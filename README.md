@@ -1,3 +1,27 @@
+
+# update for OpenCV 4.8.0
+
+迁移至OpenCV 4.8.0, YuNet(face_detection_yunet_2023mar.onnx)编译通过
+
+> platform:
+>     windows 10 x64
+>     MinGW-w64-x86_64-13.1.0-release-posix-seh-ucrt-rt_v11-rev1
+>     opencv 4.8.0
+>     cmake 3.27.4
+>     qtcreator 11.0.2 (qt 6.5.2)
+
+编译指令：
+```dos
+cd <opencv_sample_dir>
+cmake -GNinja -DOpenCV_DIR=D:/Dev/Qt/6.5.2/3rdParty/opencv -Bbuild -S.
+cmake --build build --parallel
+
+```
+
+关于人脸识别示例
+
+使用`opencv model zoo`中的`face_detection_yunet`重新改写原示例中的人脸识别部分，同时更新模型，测试使用`model zoo`中的`face_detection_yunet_2023mar.onnx`模型和`yunet_n_640_640.onnx`模型(南方科技大学于仕琪老师)均通过，[链接地址](https://github.com/ShiqiYu/libfacedetection.train/tree/master/onnx)
+
 # OpenCV Sample Code
 https://user-images.githubusercontent.com/11009876/131844621-a7c43048-edd7-4f74-b85d-7c7bf74f53bb.mp4
 
